@@ -13,7 +13,8 @@ fs.readdirSync(webhooksPath).forEach((folder) => {
 	const folderPath = path.join(webhooksPath, folder);
 	console.log(folder);
 	const stats = fs.lstatSync(folderPath);
-
+	console.log(stats.isDirectory());
+	console.log(fs.existsSync(path.join(folderPath, "index.ts")));
 	// Check if the item is a directory and has an index.ts
 	if (
 		stats.isDirectory() &&
