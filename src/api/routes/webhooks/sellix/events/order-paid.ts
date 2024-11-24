@@ -35,9 +35,12 @@ export default async (payload: any, client: Client): Promise<void> => {
 		await discordUser.send(
 			`Thank you for your order! The ID of your order is: \`${payload.uniqid}\``
 		);
+		console.log(
+			`Sent thank you DM to ${discordUsername} (${discordUserId})`
+		);
 	} catch (ignored) {
 		console.log(
-			`Failed to DM thank you embed to ${discordUsername} (${discordUserId})`
+			`Failed to DM thank you message to ${discordUsername} (${discordUserId})`
 		);
 	}
 	// TODO: Add the invoice to the user in discord
