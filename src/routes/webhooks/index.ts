@@ -17,10 +17,11 @@ fs.readdirSync(webhooksPath).forEach((folder) => {
 		(fs.existsSync(path.join(folderPath, "index.ts")) ||
 			fs.existsSync(path.join(folderPath, "index.js")))
 	) {
-		const webhookRouter = require(path.join(
-			folderPath,
-			"index.ts"
-		)).default;
+		const webhookRouter = require(fs.existsSync(
+			path.join(folderPath, "index.ts")
+		)
+			? path.join(folderPath, "index.ts")
+			: path.join(folderPath, "index.js")).default;
 		console.log(`/${folder}`);
 		router.use(`/${folder}`, webhookRouter);
 	}
