@@ -11,6 +11,7 @@ const webhooksPath = path.join(__dirname);
 fs.readdirSync(webhooksPath).forEach((folder) => {
 	console.log(webhooksPath);
 	const folderPath = path.join(webhooksPath, folder);
+	console.log(folder);
 	const stats = fs.lstatSync(folderPath);
 
 	// Check if the item is a directory and has an index.ts
