@@ -14,7 +14,7 @@ setDiscordClient(client);
 export const startDiscordBot = async (token: string) => {
 	try {
 		await client.login(token);
-		console.log("Discord bot logged in!");
+		console.log(`Discord bot logged in as user ${client.user?.username}!`);
 	} catch (error) {
 		console.error("Error starting Discord bot:", error);
 	}
