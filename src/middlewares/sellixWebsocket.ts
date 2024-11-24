@@ -7,6 +7,12 @@ export const sellixWebsocket = (
 	res: Response,
 	next: NextFunction
 ): void => {
+	if (!req.body || req.body == "") {
+		res.status(400).json({
+			message: "Invalid request body!"
+		});
+		return;
+	}
 	const signature = crypto
 		.createHmac("sha512", config.SELLIX_WEBHOOK_SECRET)
 		.update(req.body)
