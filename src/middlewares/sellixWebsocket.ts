@@ -12,6 +12,7 @@ export const sellixWebsocket = (
 		.update(req.body)
 		.digest("hex");
 	const headerSignature = req.headers["x-sellix-unescaped-signature"];
+	console.log(headerSignature);
 
 	if (
 		headerSignature &&
