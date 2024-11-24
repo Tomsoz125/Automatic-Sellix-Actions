@@ -9,16 +9,13 @@ const webhooksPath = path.join(__dirname);
 
 // Dynamically load all webhook folders
 fs.readdirSync(webhooksPath).forEach((folder) => {
-	console.log(webhooksPath);
 	const folderPath = path.join(webhooksPath, folder);
-	console.log(folder);
 	const stats = fs.lstatSync(folderPath);
-	console.log(stats.isDirectory());
-	console.log(fs.existsSync(path.join(folderPath, "index.ts")));
 	// Check if the item is a directory and has an index.ts
 	if (
 		stats.isDirectory() &&
-		fs.existsSync(path.join(folderPath, "index.ts"))
+		(fs.existsSync(path.join(folderPath, "index.ts")) ||
+			fs.existsSync(path.join(folderPath, "index.js")))
 	) {
 		const webhookRouter = require(path.join(
 			folderPath,
