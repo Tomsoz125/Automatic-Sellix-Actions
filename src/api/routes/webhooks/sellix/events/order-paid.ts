@@ -40,7 +40,6 @@ export default async (payload: any, client: Client): Promise<void> => {
 			`Failed to DM thank you embed to ${discordUsername} (${discordUserId})`
 		);
 	}
-	console.log("Sellix Order Paid:", payload);
 	// TODO: Add the invoice to the user in discord
 };
 
