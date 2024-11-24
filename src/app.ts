@@ -1,8 +1,8 @@
 import bodyParser from "body-parser";
 import cors from "cors";
 import express, { Application } from "express";
-import { errorHandler } from "./middlewares/errorMiddleware";
-import routes from "./routes";
+import { errorHandler } from "./api/middlewares/errorMiddleware";
+import routes from "./api/routes";
 
 const app: Application = express();
 

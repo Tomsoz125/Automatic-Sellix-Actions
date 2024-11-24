@@ -22,7 +22,6 @@ fs.readdirSync(webhooksPath).forEach((folder) => {
 		)
 			? path.join(folderPath, "index.ts")
 			: path.join(folderPath, "index.js")).default;
-		console.log(`/${folder}`);
 		router.use(`/${folder}`, webhookRouter);
 	}
 });

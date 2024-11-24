@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { config } from "../config/config";
+import { config } from "../../config/config";
 const crypto = require("crypto");
 
 export const sellixWebsocket = (
@@ -12,7 +12,6 @@ export const sellixWebsocket = (
 		.update(JSON.stringify(req.body))
 		.digest("hex");
 	const headerSignature = req.headers["x-sellix-unescaped-signature"];
-	console.log(headerSignature);
 
 	if (
 		headerSignature &&
