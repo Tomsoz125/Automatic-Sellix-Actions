@@ -9,6 +9,7 @@ const webhooksPath = path.join(__dirname);
 
 // Dynamically load all webhook folders
 fs.readdirSync(webhooksPath).forEach((folder) => {
+	console.log(webhooksPath);
 	const folderPath = path.join(webhooksPath, folder);
 	const stats = fs.lstatSync(folderPath);
 
