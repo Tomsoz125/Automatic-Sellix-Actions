@@ -4,7 +4,7 @@ const router = Router();
 
 router.post("/", (req, res) => {
 	const payload = req.body;
-	console.log("Received Sellix webhook:", payload);
+	console.log("Received Sellix webhook:\n", payload);
 	res.status(200).json({ message: "Sellix webhook received" });
 });
 
