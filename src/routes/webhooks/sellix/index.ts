@@ -17,10 +17,8 @@ fs.readdirSync(eventsPath).forEach((file) => {
 	}
 });
 
-router.use(sellixWebsocket);
-
 // Handle incoming Sellix webhooks
-router.post("/", (req, res) => {
+router.post("/", sellixWebsocket, (req, res) => {
 	const eventType = req.headers["x-sellix-event"] as string;
 	const payload = req.body;
 
