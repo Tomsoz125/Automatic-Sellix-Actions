@@ -37,12 +37,13 @@ export default async (payload: any, client: Client): Promise<void> => {
 			config.stores[payload.name].name
 		}** ❤️!\nI've created a ticket for you on our [donation server](${
 			config.donoInvite
-		}) where our admin team can assist you furthern\nTo automatically claim your donation you can run the commands in your ticket \`/addimplant\` to link your implant id and then \`/claim\` to be automatically given your donation!\n\nThe following items are in your order:${payload[
+		}) where our admin team can assist you further!\nTo automatically claim your donation you can run the commands in your ticket \`/addimplant\` to link your implant id and then \`/claim\` to be automatically given your donation!\n\nThe following items are in your order:${payload[
 			"products"
 		].map(
 			(p: any) =>
 				`\n* \`${
-					parseInt(p.title.match(/^\d+/)) * getOrDefault(p, "qty", 1)
+					parseInt(p.title.match(/^\d+/)?.[0] || "0") *
+					getOrDefault(p, "qty", 1)
 				}x ${p.title.replace(/^\d+x\s/, "")}\``
 		)}`;
 
