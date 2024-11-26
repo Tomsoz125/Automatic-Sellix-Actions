@@ -1,5 +1,6 @@
 import { Client, EmbedBuilder } from "discord.js";
 import { config } from "../../../../../config/config";
+import pool from "../../../../../config/database";
 import getOrDefault from "../../../../../utils/getOrDefault";
 
 export default async (
@@ -35,6 +36,60 @@ export default async (
 			`Failed to fetch discord user ${discordUsername} (${discordUserId})`
 		);
 		return;
+	}
+
+	const connection = await pool.getConnection();
+	const packs = [];
+	const earlyPacks = [];
+	const nonAutomatic = [];
+	try {
+		const rs = await connection.execute(
+			`SELECT donations_at FROM Config WHERE sellix_store = ?;`,
+			[store.name]
+		);
+		let dono_release = 172800;
+		if (rs.length > 0) {
+			// @ts-ignore
+			dono_release = rs[0].donations_at;
+		}
+
+		for (const p of payload.products) {
+			const rows = await connection.execute(
+				`SELECT enabled_at FROM Packs WHERE sellix_id = ?;`,
+				[p.uniqid]
+			);
+			if (rows.length > 0) {
+				const product = rows[0];
+				if (!product) {
+					nonAutomatic.push(p.uniqid);
+				} else {
+					if (
+						// @ts-ignore
+						product.enabled_at &&
+						// @ts-ignore
+						product.enabled_at < dono_release
+					) {
+						earlyPacks.push(p.uniqid);
+					} else {
+						packs.push(p.uniqid);
+					}
+				}
+			} else {
+				nonAutomatic.push(p.uniqid);
+			}
+		}
+		await connection.execute(
+			`INSERT INTO \`Invoices\` (\`invoice_id\`, \`user_id\`, \`redeemed\`, \`items\`, \`early_items\`) VALUES (?, ?, ?, ?, ?);`,
+			[
+				payload.uniqid,
+				discordUserId,
+				0,
+				JSON.stringify(packs),
+				JSON.stringify(earlyPacks)
+			]
+		);
+	} finally {
+		connection.release();
 	}
 
 	try {

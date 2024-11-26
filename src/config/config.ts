@@ -3,9 +3,9 @@ dotenv();
 
 export const config = {
 	PORT: process.env.PORT || 25596,
-	DATABASE_URL: process.env.DATABASE_URL || "",
 	BOT_TOKEN: process.env.BOT_TOKEN || "",
 	donoInvite: "https://discord.gg/hvndonos",
+	allowedSellixIps: ["99.81.24.41"],
 	stores: {
 		"Dros-Haven": {
 			name: "Dro's Haven",
@@ -17,9 +17,9 @@ export const config = {
 	}
 } as {
 	PORT: number;
-	DATABASE_URL: string;
 	BOT_TOKEN: string;
 	donoInvite: string;
+	allowedSellixIps: string[];
 	stores: {
 		[key: string]: {
 			name: string;

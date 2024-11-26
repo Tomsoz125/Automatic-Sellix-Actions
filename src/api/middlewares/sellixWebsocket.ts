@@ -7,12 +7,17 @@ export const sellixWebsocket = (
 	res: Response,
 	next: NextFunction
 ): void => {
+	const requestIp = req.ip;
+	if (!requestIp || !config.allowedSellixIps.includes(requestIp)) {
+		return;
+	}
+
 	const payload = req.body.data;
 	const store =
 		payload.name in config.stores ? config.stores[payload.name] : undefined;
 	if (!store) {
-		res.status(400).json({
-			message: `That store is not configured!`
+		res.status(401).json({
+			message: `Access is not allowed from this IP address!`
 		});
 		return;
 	}
