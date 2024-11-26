@@ -7,12 +7,6 @@ export const sellixWebsocket = (
 	res: Response,
 	next: NextFunction
 ): void => {
-	const requestIp = req.ip;
-	console.log(requestIp);
-	if (!requestIp || !config.allowedSellixIps.includes(requestIp)) {
-		return;
-	}
-
 	const payload = req.body.data;
 	const store =
 		payload.name in config.stores ? config.stores[payload.name] : undefined;
