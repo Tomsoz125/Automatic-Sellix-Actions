@@ -96,6 +96,8 @@ export default async (
 				JSON.stringify(earlyPacks)
 			]
 		);
+	} catch (e) {
+		console.log(e);
 	} finally {
 		connection.release();
 	}
