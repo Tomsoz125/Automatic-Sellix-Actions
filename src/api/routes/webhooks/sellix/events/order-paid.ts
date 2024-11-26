@@ -61,7 +61,9 @@ export default async (
 			if (rows.length > 0) {
 				const product = rows[0];
 				if (!product) {
-					nonAutomatic.push(p.uniqid);
+					for (let i = 0; i < p.unit_quantity; i++) {
+						nonAutomatic.push(p.uniqid);
+					}
 				} else {
 					if (
 						// @ts-ignore
@@ -69,13 +71,19 @@ export default async (
 						// @ts-ignore
 						product.enabled_at < dono_release
 					) {
-						earlyPacks.push(p.uniqid);
+						for (let i = 0; i < p.unit_quantity; i++) {
+							earlyPacks.push(p.uniqid);
+						}
 					} else {
-						packs.push(p.uniqid);
+						for (let i = 0; i < p.unit_quantity; i++) {
+							packs.push(p.uniqid);
+						}
 					}
 				}
 			} else {
-				nonAutomatic.push(p.uniqid);
+				for (let i = 0; i < p.unit_quantity; i++) {
+					nonAutomatic.push(p.uniqid);
+				}
 			}
 		}
 		await connection.execute(
