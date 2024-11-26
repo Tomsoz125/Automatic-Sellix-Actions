@@ -8,6 +8,7 @@ export const sellixWebsocket = (
 	next: NextFunction
 ): void => {
 	const requestIp = req.ip;
+	console.log(requestIp);
 	if (!requestIp || !config.allowedSellixIps.includes(requestIp)) {
 		return;
 	}
