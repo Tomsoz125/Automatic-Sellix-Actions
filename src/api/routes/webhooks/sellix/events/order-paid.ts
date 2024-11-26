@@ -49,8 +49,8 @@ export default async (
 				(p: any) =>
 					`\n* \`${
 						parseInt(p.title.match(/^\d+/)?.[0] || "1") *
-						getOrDefault(p, "qty", 1)
-					}x ${p.title.replace(/^\d+x\s/, "")}\``
+						getOrDefault(p, "unit_quantity", 1)
+					}x ${p.title.replace(/^\d+x?\s/, "")}\``
 			)
 			.join(
 				"\n"
