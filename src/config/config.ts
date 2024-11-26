@@ -11,7 +11,7 @@ export const config = {
 			name: "Dro's Haven",
 			colour: "#4de0f9",
 			channelId: "1299108148900139100",
-			webhookSecret: "XUrg0PWXfGy3oe4TZuUOo3ckflG0NPV9",
+			webhookSecret: process.env.DROS_WS_SECRET || "",
 			heartEmoji: "💙"
 		}
 	}
