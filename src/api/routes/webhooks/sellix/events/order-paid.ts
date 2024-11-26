@@ -2,7 +2,11 @@ import { Client, EmbedBuilder } from "discord.js";
 import { config } from "../../../../../config/config";
 import getOrDefault from "../../../../../utils/getOrDefault";
 
-export default async (payload: any, client: Client): Promise<void> => {
+export default async (
+	payload: any,
+	store: any,
+	client: Client
+): Promise<void> => {
 	const discordUserId = getOrDefault(
 		getOrDefault(payload, "custom_fields", {}),
 		"discord_id",
@@ -33,11 +37,11 @@ export default async (payload: any, client: Client): Promise<void> => {
 	}
 
 	try {
-		const desc = `Thank you for your order on **${
-			config.stores[payload.name].name
-		}** ❤️!\nI've created a ticket for you on our [donation server](${
+		const desc = `Thank you for your order on **${store.name}** ${
+			store.heartEmoji
+		}!\nI've created a ticket for you on our [donation server](${
 			config.donoInvite
-		}) where our admin team can assist you further!\nTo automatically claim your donation you can run the commands in your ticket \`/addimplant\` to link your implant id and then \`/claim\` to be automatically given your donation!\n\nThe following items are in your order:${payload[
+		}) where our admin team can assist you further!\n\nTo automatically claim your donation you can run the commands in your ticket \`/addimplant\` to link your implant id and then \`/claim\` to be automatically given your donation!\n\n**The following items are in your order:**${payload[
 			"products"
 		].map(
 			(p: any) =>
@@ -45,7 +49,7 @@ export default async (payload: any, client: Client): Promise<void> => {
 					parseInt(p.title.match(/^\d+/)?.[0] || "1") *
 					getOrDefault(p, "qty", 1)
 				}x ${p.title.replace(/^\d+x\s/, "")}\``
-		)}`;
+		)}\n-# *If you believe this is an error please mention it in your ticket*`;
 
 		const embed = new EmbedBuilder()
 			.setAuthor({
@@ -57,6 +61,7 @@ export default async (payload: any, client: Client): Promise<void> => {
 				text: `Invoice ID: ${payload.uniqid}`,
 				iconURL: client.user?.displayAvatarURL()
 			})
+			.setColor(store.colour)
 			.setTimestamp(new Date());
 		await discordUser.send({ embeds: [embed] });
 		console.log(

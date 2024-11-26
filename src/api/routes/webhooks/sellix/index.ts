@@ -2,6 +2,7 @@ import { Client } from "discord.js";
 import { Router } from "express";
 import fs from "fs";
 import path from "path";
+import { config } from "../../../../config/config";
 import { getDiscordClient } from "../../../../utils/discordClient";
 import { sellixWebsocket } from "../../../middlewares/sellixWebsocket";
 
@@ -11,8 +12,10 @@ const router = Router();
 const eventsPath = path.join(__dirname, "events");
 
 // Load all event handlers dynamically
-const eventHandlers: Record<string, (payload: any, client: Client) => void> =
-	{};
+const eventHandlers: Record<
+	string,
+	(payload: any, store: any, client: Client) => void
+> = {};
 fs.readdirSync(eventsPath).forEach((file) => {
 	if (file.endsWith(".ts") || file.endsWith(".js")) {
 		const eventName = file.replace(/\.[tj]s$/, "").replace("-", ":"); // Remove extension
@@ -31,10 +34,18 @@ router.post("/", sellixWebsocket, async (req, res) => {
 	}
 	const eventType = req.headers["x-sellix-event"] as string;
 	const payload = req.body.data;
+	const store =
+		payload.name in config.stores ? config.stores[payload.name] : undefined;
+	if (!store) {
+		res.status(400).json({
+			message: `That store is not configured!`
+		});
+		return;
+	}
 
 	if (eventHandlers[eventType]) {
 		try {
-			await eventHandlers[eventType](payload, client); // Call the appropriate handler
+			await eventHandlers[eventType](payload, store, client); // Call the appropriate handler
 			res.status(200).json({
 				message: `Handled Sellix event: ${eventType}`
 			});

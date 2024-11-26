@@ -7,8 +7,18 @@ export const sellixWebsocket = (
 	res: Response,
 	next: NextFunction
 ): void => {
+	const payload = req.body.data;
+	const store =
+		payload.name in config.stores ? config.stores[payload.name] : undefined;
+	if (!store) {
+		res.status(400).json({
+			message: `That store is not configured!`
+		});
+		return;
+	}
+
 	const signature = crypto
-		.createHmac("sha512", config.SELLIX_WEBHOOK_SECRET)
+		.createHmac("sha512", store.webhookSecret)
 		.update(JSON.stringify(req.body))
 		.digest("hex");
 	const headerSignature = req.headers["x-sellix-unescaped-signature"];
