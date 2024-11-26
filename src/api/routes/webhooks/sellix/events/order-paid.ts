@@ -1,4 +1,5 @@
-import { Client } from "discord.js";
+import { Client, EmbedBuilder } from "discord.js";
+import { config } from "../../../../../config/config";
 import getOrDefault from "../../../../../utils/getOrDefault";
 
 export default async (payload: any, client: Client): Promise<void> => {
@@ -32,9 +33,31 @@ export default async (payload: any, client: Client): Promise<void> => {
 	}
 
 	try {
-		await discordUser.send(
-			`Thank you for your order! The ID of your order is: \`${payload.uniqid}\``
-		);
+		const desc = `Thank you for your order on **${
+			config.stores[payload.name].name
+		}** ❤️!\nI've created a ticket for you on our [donation server](${
+			config.donoInvite
+		}) where our admin team can assist you furthern\nTo automatically claim your donation you can run the commands in your ticket \`/addimplant\` to link your implant id and then \`/claim\` to be automatically given your donation!\n\nThe following items are in your order:${payload[
+			"products"
+		].map(
+			(p: any) =>
+				`\n* \`${
+					parseInt(p.title.match(/^\d+/)) * 2
+				}x ${p.title.replace(/^\d+x\s/, "")}\``
+		)}`;
+
+		const embed = new EmbedBuilder()
+			.setAuthor({
+				name: "Thank you for your order!",
+				iconURL: discordUser.displayAvatarURL()
+			})
+			.setDescription(desc)
+			.setFooter({
+				text: `Invoice ID: ${payload.uniqid}`,
+				iconURL: client.user?.displayAvatarURL()
+			})
+			.setTimestamp(new Date());
+		await discordUser.send({ embeds: [embed] });
 		console.log(
 			`Sent thank you DM to ${discordUsername} (${discordUserId})`
 		);
