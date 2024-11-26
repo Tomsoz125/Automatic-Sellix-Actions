@@ -7,6 +7,7 @@ export default async (
 	store: any,
 	client: Client
 ): Promise<void> => {
+	console.log(payload);
 	const discordUserId = getOrDefault(
 		getOrDefault(payload, "custom_fields", {}),
 		"discord_id",
