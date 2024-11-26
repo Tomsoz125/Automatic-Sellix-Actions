@@ -43,13 +43,17 @@ export default async (
 			config.donoInvite
 		}) where our admin team can assist you further!\n\nTo automatically claim your donation you can run the commands in your ticket \`/addimplant\` to link your implant id and then \`/claim\` to be automatically given your donation!\n\n**The following items are in your order:**${payload[
 			"products"
-		].map(
-			(p: any) =>
-				`\n* \`${
-					parseInt(p.title.match(/^\d+/)?.[0] || "1") *
-					getOrDefault(p, "qty", 1)
-				}x ${p.title.replace(/^\d+x\s/, "")}\``
-		)}\n-# *If you believe this is an error please mention it in your ticket*`;
+		]
+			.map(
+				(p: any) =>
+					`\n* \`${
+						parseInt(p.title.match(/^\d+/)?.[0] || "1") *
+						getOrDefault(p, "qty", 1)
+					}x ${p.title.replace(/^\d+x\s/, "")}\``
+			)
+			.join(
+				"\n"
+			)}\n-# *If you believe this is an error please mention it in your ticket*`;
 
 		const embed = new EmbedBuilder()
 			.setAuthor({
