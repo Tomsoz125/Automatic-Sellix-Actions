@@ -42,7 +42,7 @@ export default async (payload: any, client: Client): Promise<void> => {
 		].map(
 			(p: any) =>
 				`\n* \`${
-					parseInt(p.title.match(/^\d+/)) * 2
+					parseInt(p.title.match(/^\d+/)) * getOrDefault(p, "qty", 1)
 				}x ${p.title.replace(/^\d+x\s/, "")}\``
 		)}`;
 
