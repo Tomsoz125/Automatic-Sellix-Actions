@@ -34,6 +34,7 @@ router.post("/", sellixWebsocket, async (req, res) => {
 	}
 	const eventType = req.headers["x-sellix-event"] as string;
 	const payload = req.body.data;
+	console.log(payload);
 	const store =
 		payload.name in config.stores ? config.stores[payload.name] : undefined;
 	if (!store) {
