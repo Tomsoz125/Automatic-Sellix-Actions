@@ -102,6 +102,23 @@ export default async (
 		connection.release();
 	}
 
+	const channelId = store.channelId;
+	try {
+		var channel = await client.channels.fetch(channelId);
+	} catch (e) {
+		console.log(`Failed to fetch channel for store ${store.name}:\n${e}`);
+		return;
+	}
+
+	if (!channel || !channel.isTextBased() || !channel.isSendable()) {
+		console.log(
+			`Failed to fetch channel for store ${store.name}! (or channel is not a text channel)`
+		);
+		return;
+	}
+
+	await channel.send({ content: `$new ${discordUser.id} ${payload.uniqid}` });
+
 	try {
 		const desc = `Thank you for your order on **${store.name}** ${
 			store.heartEmoji
@@ -143,6 +160,8 @@ export default async (
 		);
 	}
 	// TODO: Add the invoice to the user in discord
+
+	// Make the ticket
 };
 
 /**
