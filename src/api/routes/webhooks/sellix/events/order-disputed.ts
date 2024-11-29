@@ -123,7 +123,9 @@ export default async (
 			}\`)
     **Store:** ${store.name} (${payload.name})
     **Redeemed:** ${
-		redeemedAt ? `<t:${redeemedAt.getMilliseconds()}:R>` : "`Not Redeemed`"
+		redeemedAt
+			? `<t:${Math.floor(redeemedAt.getTime() / 1000)}:R>`
+			: "`Not Redeemed`"
 	}
     **Products:** ${payload.products
 		.map(
