@@ -15,7 +15,10 @@ export const config = {
 			heartEmoji: "💙",
 			categories: [],
 			ping: "",
-			discordId: ""
+			discordId: "",
+			disputeChannel: "",
+			disputeCategory: [],
+			disputePing: ""
 		},
 		vitalityw10: {
 			name: "Vitality Trios",
@@ -26,7 +29,11 @@ export const config = {
 			heartEmoji: "🧡",
 			categories: ["1312004983310254113"],
 			ping: "938025265995583528",
-			discordId: "932586440188104724"
+			discordId: "932586440188104724",
+			disputeChannel: "1312099900313436191",
+			disputeCategory: ["1312100484621795348"],
+			disputePing:
+				"<@&937915616902397993><@&1052446269433446480><@&961338893792317500>"
 		}
 	}
 } as {
@@ -44,6 +51,9 @@ export const config = {
 			categories: string[];
 			ping: string;
 			discordId: string;
+			disputeChannel: string;
+			disputeCategory: string[];
+			disputePing: string;
 		};
 	};
 };

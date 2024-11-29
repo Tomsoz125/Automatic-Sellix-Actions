@@ -1,11 +1,6 @@
-import {
-	ChannelType,
-	Client,
-	EmbedBuilder,
-	OverwriteType,
-	PermissionFlagsBits
-} from "discord.js";
+import { Client, EmbedBuilder } from "discord.js";
 import pool from "../../../../../config/database";
+import getExistingTicket from "../../../../../utils/getExistingTicket";
 import getOrDefault from "../../../../../utils/getOrDefault";
 
 export default async (
@@ -106,13 +101,6 @@ export default async (
 		connection.release();
 	}
 
-	const channelId = store.channelId;
-	try {
-		var channel = await client.channels.fetch(channelId);
-	} catch (e) {
-		console.log(`Failed to fetch channel for store ${store.name}:\n${e}`);
-		return;
-	}
 	try {
 		var g = await client.guilds.fetch(store.discordId);
 	} catch (e) {
@@ -132,51 +120,24 @@ export default async (
 		return;
 	}
 	if (inDiscord) {
-		const categories = store.categories;
-		var existingTicket;
-		for (const category of categories) {
-			try {
-				var ticketCategory = await client.channels.fetch(category);
-			} catch (e) {
-				console.log(
-					`Failed to fetch category for store ${store.name}:\n${e}`
-				);
-				continue;
-			}
-			if (!ticketCategory) {
-				console.log(`Failed to fetch category for store ${store.name}`);
-				continue;
-			}
-			if (ticketCategory.type !== ChannelType.GuildCategory) {
-				console.log(`Failed to fetch category for store ${store.name}`);
-				continue;
-			}
-			for (let t of ticketCategory.children.cache) {
-				const ticket = t[1];
-				const canUserSee = ticket.permissionOverwrites.cache.find(
-					(o) =>
-						o.type === OverwriteType.Member &&
-						o.id === discordUser.id
-				);
-				if (
-					canUserSee &&
-					canUserSee.allow.has(
-						PermissionFlagsBits.ViewChannel,
-						false
-					) &&
-					canUserSee.allow.has(
-						PermissionFlagsBits.SendMessages,
-						false
-					) &&
-					ticket.isSendable() &&
-					ticket.isTextBased()
-				) {
-					existingTicket = ticket;
-				}
-			}
-		}
+		var existingTicket = await getExistingTicket(
+			client,
+			store.categories,
+			store,
+			discordUserId
+		);
 
 		if (!existingTicket) {
+			const channelId = store.channelId;
+			try {
+				var channel = await client.channels.fetch(channelId);
+			} catch (e) {
+				console.log(
+					`Failed to fetch channel for store ${store.name}:\n${e}`
+				);
+				return;
+			}
+
 			if (!channel || !channel.isTextBased() || !channel.isSendable()) {
 				console.log(
 					`Failed to fetch channel for store ${store.name}! (or channel is not a text channel)`
