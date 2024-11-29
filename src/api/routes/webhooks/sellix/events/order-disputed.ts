@@ -20,9 +20,9 @@ export default async (
 		console.log(rs);
 		if (rs.length > 0) {
 			// @ts-ignore
-			discordId = rs[0].user_id;
+			discordId = rs[0][0].user_id;
 			// @ts-ignore
-			redeemedAt = rs[0].redeemed_at;
+			redeemedAt = rs[0][0].redeemed_at;
 		}
 	} catch (e) {
 		console.log(e);
