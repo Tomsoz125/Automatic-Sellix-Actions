@@ -9,7 +9,6 @@ export default async (
 	store: any,
 	client: Client
 ): Promise<void> => {
-	console.log(payload);
 	const connection = await pool.getConnection();
 	var discordId = null;
 	var redeemedAt: Date | null = null;
@@ -131,7 +130,7 @@ export default async (
 						.join("")}}
                 `);
 	const message = await existingTicket.send({
-		content: `${store.disputePing}<@${discordId}>`,
+		content: `||${store.disputePing}<@${discordId}>||`,
 		embeds: [disputeMsg]
 	});
 	await message.pin();
