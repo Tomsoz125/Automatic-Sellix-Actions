@@ -17,7 +17,7 @@ export const config = {
 			ping: "",
 			discordId: "",
 			disputeChannel: "",
-			disputeCategory: [],
+			disputeCategories: [],
 			disputePing: ""
 		},
 		vitalityw10: {
@@ -31,7 +31,7 @@ export const config = {
 			ping: "938025265995583528",
 			discordId: "932586440188104724",
 			disputeChannel: "1312099900313436191",
-			disputeCategory: ["1312100484621795348"],
+			disputeCategories: ["1312100484621795348"],
 			disputePing:
 				"<@&937915616902397993><@&1052446269433446480><@&961338893792317500>"
 		}
@@ -52,7 +52,7 @@ export const config = {
 			ping: string;
 			discordId: string;
 			disputeChannel: string;
-			disputeCategory: string[];
+			disputeCategories: string[];
 			disputePing: string;
 		};
 	};

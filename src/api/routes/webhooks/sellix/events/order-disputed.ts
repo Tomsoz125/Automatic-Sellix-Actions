@@ -11,14 +11,14 @@ export default async (
 ): Promise<void> => {
 	console.log(payload);
 	const connection = await pool.getConnection();
+	var discordId = null;
+	var redeemedAt: Date | null = null;
 	try {
 		const rs = await connection.execute(
 			`SELECT user_id, redeemed_at FROM Invoices WHERE invoice_id = ?;`,
 			[payload.uniqid]
 		);
 
-		var discordId;
-		var redeemedAt;
 		if (rs.length > 0) {
 			// @ts-ignore
 			discordId = rs[0].user_id;
@@ -114,6 +114,11 @@ export default async (
 		payload.is_vpn_or_proxy ? "VPN" : "Not VPN"
 	}\`)
                     **Store:** ${store.name} (${payload.name})\n
+                    **Redeemed:** ${
+						redeemedAt
+							? `<t:${redeemedAt.getUTCMilliseconds()}:R>`
+							: "`Not Redeemed`"
+					}\n
                     **Products:** ${payload.products
 						.map(
 							(p: any) =>
