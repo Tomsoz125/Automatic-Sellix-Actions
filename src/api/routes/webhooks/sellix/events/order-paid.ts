@@ -1,4 +1,10 @@
-import { ChannelType, Client, EmbedBuilder, OverwriteType } from "discord.js";
+import {
+	ChannelType,
+	Client,
+	EmbedBuilder,
+	OverwriteType,
+	PermissionFlagsBits
+} from "discord.js";
 import pool from "../../../../../config/database";
 import getOrDefault from "../../../../../utils/getOrDefault";
 
@@ -126,7 +132,13 @@ export default async (
 				(o) =>
 					o.type === OverwriteType.Member && o.id === discordUser.id
 			);
-			if (canUserSee && ticket.isSendable() && ticket.isTextBased()) {
+			if (
+				canUserSee &&
+				canUserSee.allow.has(PermissionFlagsBits.ViewChannel, false) &&
+				canUserSee.allow.has(PermissionFlagsBits.SendMessages, false) &&
+				ticket.isSendable() &&
+				ticket.isTextBased()
+			) {
 				existingTicket = ticket;
 			}
 		}
