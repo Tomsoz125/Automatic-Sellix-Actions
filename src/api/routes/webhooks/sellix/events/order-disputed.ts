@@ -19,7 +19,6 @@ export default async (
 			`SELECT user_id, redeemed_at FROM Invoices WHERE invoice_id = ?;`,
 			[payload.uniqid]
 		);
-		console.log(rs);
 		if (rs.length > 0) {
 			// @ts-ignore
 			discordId = rs[0][0].user_id;

@@ -47,6 +47,7 @@ export default async (
 			`SELECT donations_at FROM Config WHERE sellix_store = ?;`,
 			[store.name]
 		);
+		console.log(rs);
 		let dono_release = 172800;
 		if (rs.length > 0) {
 			// @ts-ignore
@@ -58,6 +59,7 @@ export default async (
 				`SELECT enabled_at FROM Packs WHERE sellix_id = ?;`,
 				[p.uniqid]
 			);
+			console.log(rows);
 			if (rows.length > 0) {
 				const product = rows[0];
 				if (!product) {
