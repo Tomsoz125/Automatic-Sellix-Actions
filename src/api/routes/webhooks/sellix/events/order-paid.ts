@@ -124,7 +124,8 @@ export default async (
 			client,
 			store.categories,
 			store,
-			discordUserId
+			discordUserId,
+			payload
 		);
 
 		if (!existingTicket) {

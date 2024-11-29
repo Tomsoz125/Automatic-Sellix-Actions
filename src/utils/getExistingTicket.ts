@@ -4,12 +4,14 @@ import {
 	OverwriteType,
 	PermissionFlagsBits
 } from "discord.js";
+import channelFormat from "./channelFormat";
 
 export = async (
 	client: Client,
 	categories: string[],
 	store: any,
 	userId: string,
+	payload: any,
 	isDispute = false
 ) => {
 	var existingTicket;
@@ -46,7 +48,10 @@ export = async (
 				break;
 			} else if (
 				isDispute &&
-				ticket.name.includes(userId) &&
+				ticket.name ==
+					channelFormat(
+						`${payload.customer_email.split("@")[0]}-dispute`
+					) &&
 				ticket.isSendable() &&
 				ticket.isTextBased()
 			) {

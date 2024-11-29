@@ -73,12 +73,13 @@ export default async (
 		client,
 		store.disputeCategories,
 		store,
-		discordId
+		discordId,
+		payload
 	);
 
 	if (!existingTicket) {
 		await channel.send({
-			content: `$new ${discordId}`
+			content: `$new ${discordId} ${payload.customer_email.split("@")[0]}`
 		});
 		res.status(200);
 		await sleep(5000);
@@ -105,39 +106,47 @@ export default async (
 	}
 
 	await existingTicket.edit({
-		name: `${discordUser ? discordUser.username : discordId}-dispute`
+		name: `${payload.customer_email.split("@")[0]}-dispute`
 	});
-	const disputeMsg = new EmbedBuilder().setAuthor({
-		name: "⚔️ New Dispute Opened",
-		iconURL: g.iconURL()!
-	}).setDescription(`
-                    **Customer ID:** ${payload.customer_id}\n
-                    **Email:** ${payload.customer_email}\n
-                    **IP Address:** ${payload.ip} (\`${
-		payload.is_vpn_or_proxy ? "VPN" : "Not VPN"
-	}\`)
-                    **Store:** ${store.name} (${payload.name})\n
-                    **Redeemed:** ${
-						redeemedAt
-							? `<t:${redeemedAt.getUTCMilliseconds()}:R>`
-							: "`Not Redeemed`"
-					}\n
-                    **Products:** ${payload.products
-						.map(
-							(p: any) =>
-								`\n* \`${
-									parseInt(
-										p.title.match(/^\d+/)?.[0] || "1"
-									) * getOrDefault(p, "unit_quantity", 1)
-								}x ${p.title.replace(/^\d+x?\s/, "")}\``
-						)
-						.join("")}}
-                `);
+	const disputeMsg = new EmbedBuilder()
+		.setAuthor({
+			name: "⚔️ New Dispute Opened",
+			iconURL: g.iconURL()!
+		})
+		.setDescription(
+			`
+    **Customer ID:** ${payload.customer_id}
+    **Email:** ${payload.customer_email}
+    **IP Address:** ${payload.ip} (\`${
+				payload.is_vpn_or_proxy ? "VPN" : "Not VPN"
+			}\`)
+    **Store:** ${store.name} (${payload.name})
+    **Redeemed:** ${
+		redeemedAt ? `<t:${redeemedAt.getMilliseconds()}:R>` : "`Not Redeemed`"
+	}
+    **Products:** ${payload.products
+		.map(
+			(p: any) =>
+				`\n* \`${
+					parseInt(p.title.match(/^\d+/)?.[0] || "1") *
+					getOrDefault(p, "unit_quantity", 1)
+				}x ${p.title.replace(/^\d+x?\s/, "")}\``
+		)
+		.join("")}
+    `
+		)
+		.setColor(store.colour)
+		.setTimestamp(new Date())
+		.setFooter({
+			text: `Invoice ID: ${payload.uniqid}`,
+			iconURL: client.user?.displayAvatarURL()
+		});
 	const message = await existingTicket.send({
 		content: `||${store.disputePing}<@${discordId}>||`,
 		embeds: [disputeMsg]
 	});
-	await message.pin();
+	const msg = await message.pin();
+	await msg.delete();
 	await channel.send({ embeds: [disputeMsg] });
 };
 
