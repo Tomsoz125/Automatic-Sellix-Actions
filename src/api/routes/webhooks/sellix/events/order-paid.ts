@@ -85,6 +85,8 @@ export default async (
 				}
 			}
 		}
+		console.log(packs);
+		console.log(earlyPacks);
 		await connection.execute(
 			`INSERT INTO \`Invoices\` (\`invoice_id\`, \`user_id\`, \`redeemed\`, \`items\`, \`early_items\`) VALUES (?, ?, ?, ?, ?);`,
 			[
@@ -158,9 +160,6 @@ export default async (
 			`Failed to DM thank you message to ${discordUsername} (${discordUserId})`
 		);
 	}
-	// TODO: Add the invoice to the user in discord
-
-	// Make the ticket
 };
 
 /**
