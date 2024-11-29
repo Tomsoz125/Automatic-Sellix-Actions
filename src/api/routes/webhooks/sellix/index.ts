@@ -34,9 +34,18 @@ router.post("/", sellixWebsocket, async (req, res) => {
 	}
 	const eventType = req.headers["x-sellix-event"] as string;
 	const payload = req.body.data;
+	if (payload.uniqid === "dummy") {
+		payload.name = "vitalityw10";
+		payload.custom_fields = {
+			discord_user: "tomsoz#0",
+			discord_id: "724833136894279690"
+		};
+	}
 	console.log(payload);
 	const store =
-		payload.name in config.stores ? config.stores[payload.name] : undefined;
+		payload.name.toLowerCase() in config.stores
+			? config.stores[payload.name.toLowerCase()]
+			: undefined;
 	if (!store) {
 		res.status(400).json({
 			message: `That store is not configured!`

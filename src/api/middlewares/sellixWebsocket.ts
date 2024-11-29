@@ -8,8 +8,17 @@ export const sellixWebsocket = (
 	next: NextFunction
 ): void => {
 	const payload = req.body.data;
+	if (payload.uniqid === "dummy") {
+		payload.name = "vitalityw10";
+		payload.custom_fields = {
+			discord_user: "tomsoz#0",
+			discord_id: "724833136894279690"
+		};
+	}
 	const store =
-		payload.name in config.stores ? config.stores[payload.name] : undefined;
+		payload.name.toLowerCase() in config.stores
+			? config.stores[payload.name.toLowerCase()]
+			: undefined;
 	if (!store) {
 		res.status(401).json({
 			message: `Access is not allowed from this IP address!`

@@ -1,5 +1,4 @@
 import { Client, EmbedBuilder } from "discord.js";
-import { config } from "../../../../../config/config";
 import pool from "../../../../../config/database";
 import getOrDefault from "../../../../../utils/getOrDefault";
 
@@ -123,7 +122,7 @@ export default async (
 		const desc = `Thank you for your order on **${store.name}** ${
 			store.heartEmoji
 		}!\nI've created a ticket for you on our [donation server](${
-			config.donoInvite
+			store.donoInvite
 		}) where our admin team can assist you further!\n\nTo automatically claim your donation you can run the commands in your ticket \`/addimplant\` to link your implant id and then \`/claim\` to be automatically given your donation!\n\n**The following items are in your order:**${payload[
 			"products"
 		]
