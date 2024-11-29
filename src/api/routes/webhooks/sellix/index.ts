@@ -41,7 +41,6 @@ router.post("/", sellixWebsocket, async (req, res) => {
 			discord_id: "724833136894279690"
 		};
 	}
-	console.log(payload);
 	const store =
 		payload.name.toLowerCase() in config.stores
 			? config.stores[payload.name.toLowerCase()]

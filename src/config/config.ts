@@ -12,7 +12,9 @@ export const config = {
 			donoInvite: "https://discord.gg/hvndonos",
 			channelId: "1299108148900139100",
 			webhookSecret: process.env.DROS_WH || "",
-			heartEmoji: "💙"
+			heartEmoji: "💙",
+			categories: [],
+			ping: ""
 		},
 		vitalityw10: {
 			name: "Vitality Trios",
@@ -20,7 +22,9 @@ export const config = {
 			donoInvite: "https://discord.gg/jEyzn3zSKy",
 			channelId: "1228702864788947064",
 			webhookSecret: process.env.VITALITY_WH || "",
-			heartEmoji: "🧡"
+			heartEmoji: "🧡",
+			categories: ["1312004983310254113"],
+			ping: "938025265995583528"
 		}
 	}
 } as {
@@ -35,6 +39,8 @@ export const config = {
 			webhookSecret: string;
 			channelId: string;
 			heartEmoji: string;
+			categories: string[];
+			ping: string;
 		};
 	};
 };

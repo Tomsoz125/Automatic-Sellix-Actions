@@ -1,4 +1,4 @@
-import { Client, EmbedBuilder } from "discord.js";
+import { ChannelType, Client, EmbedBuilder, OverwriteType } from "discord.js";
 import pool from "../../../../../config/database";
 import getOrDefault from "../../../../../utils/getOrDefault";
 
@@ -85,8 +85,6 @@ export default async (
 				}
 			}
 		}
-		console.log(packs);
-		console.log(earlyPacks);
 		await connection.execute(
 			`INSERT INTO \`Invoices\` (\`invoice_id\`, \`user_id\`, \`redeemed\`, \`items\`, \`early_items\`) VALUES (?, ?, ?, ?, ?);`,
 			[
@@ -103,27 +101,77 @@ export default async (
 		connection.release();
 	}
 
-	const channelId = store.channelId;
-	try {
-		var channel = await client.channels.fetch(channelId);
-	} catch (e) {
-		console.log(`Failed to fetch channel for store ${store.name}:\n${e}`);
-		return;
+	const categories = store.categories;
+	let existingTicket;
+	for (const category of categories) {
+		try {
+			var ticketCategory = await client.channels.fetch(category);
+		} catch (e) {
+			console.log(
+				`Failed to fetch category for store ${store.name}:\n${e}`
+			);
+			continue;
+		}
+		if (!ticketCategory) {
+			console.log(`Failed to fetch category for store ${store.name}`);
+			continue;
+		}
+		if (ticketCategory.type !== ChannelType.GuildCategory) {
+			console.log(`Failed to fetch category for store ${store.name}`);
+			continue;
+		}
+		for (let t of ticketCategory.children.cache) {
+			const ticket = t[1];
+			const canUserSee = ticket.permissionOverwrites.cache.find(
+				(o) =>
+					o.type === OverwriteType.Member && o.id === discordUser.id
+			);
+			if (canUserSee && ticket.isSendable() && ticket.isTextBased()) {
+				existingTicket = ticket;
+			}
+		}
 	}
 
-	if (!channel || !channel.isTextBased() || !channel.isSendable()) {
-		console.log(
-			`Failed to fetch channel for store ${store.name}! (or channel is not a text channel)`
-		);
-		return;
-	}
+	if (!existingTicket) {
+		const channelId = store.channelId;
+		try {
+			var channel = await client.channels.fetch(channelId);
+		} catch (e) {
+			console.log(
+				`Failed to fetch channel for store ${store.name}:\n${e}`
+			);
+			return;
+		}
 
-	await channel.send({ content: `$new ${discordUser.id} ${payload.uniqid}` });
+		if (!channel || !channel.isTextBased() || !channel.isSendable()) {
+			console.log(
+				`Failed to fetch channel for store ${store.name}! (or channel is not a text channel)`
+			);
+			return;
+		}
+
+		await channel.send({
+			content: `$new ${discordUser.id} ${payload.uniqid}`
+		});
+	} else {
+		await existingTicket.send({
+			content: `||<@${discordUser.id}${payload.uniqid}<@&${store.ping}>||`,
+			embeds: [
+				new EmbedBuilder().setDescription(
+					`<@${discordUser.id}> has placed a new order!\nThe order has been added to your account, please run \`/claim\` to claim it!`
+				)
+			]
+		});
+	}
 
 	try {
 		const desc = `Thank you for your order on **${store.name}** ${
 			store.heartEmoji
-		}!\nI've created a ticket for you on our [donation server](${
+		}!\n${
+			existingTicket
+				? "I've sent a message in your existing ticket"
+				: "I've created a ticket for you"
+		} on our [donation server](${
 			store.donoInvite
 		}) where our admin team can assist you further!\n\nTo automatically claim your donation you can run the commands in your ticket \`/addimplant\` to link your implant id and then \`/claim\` to be automatically given your donation!\n\n**The following items are in your order:**${payload[
 			"products"
