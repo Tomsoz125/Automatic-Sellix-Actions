@@ -55,9 +55,11 @@ router.post("/", sellixWebsocket, async (req, res) => {
 	if (eventHandlers[eventType]) {
 		try {
 			await eventHandlers[eventType](payload, store, client); // Call the appropriate handler
-			res.status(200).json({
-				message: `Handled Sellix event: ${eventType}`
-			});
+			if (!res.statusCode) {
+				res.status(200).json({
+					message: `Handled Sellix event: ${eventType}`
+				});
+			}
 		} catch (err) {
 			console.error(`Error handling Sellix event: ${eventType}`, err);
 			res.status(500).json({

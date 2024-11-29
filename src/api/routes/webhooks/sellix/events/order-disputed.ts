@@ -1,4 +1,5 @@
 import { Client, EmbedBuilder } from "discord.js";
+import { Response } from "express";
 import pool from "../../../../../config/database";
 import getExistingTicket from "../../../../../utils/getExistingTicket";
 import getOrDefault from "../../../../../utils/getOrDefault";
@@ -6,6 +7,7 @@ import sleep from "../../../../../utils/sleep";
 
 export default async (
 	payload: any,
+	res: Response,
 	store: any,
 	client: Client
 ): Promise<void> => {
@@ -78,6 +80,7 @@ export default async (
 		await channel.send({
 			content: `$new ${discordId}`
 		});
+		res.status(200);
 		await sleep(5000);
 		existingTicket = await getExistingTicket(
 			client,
