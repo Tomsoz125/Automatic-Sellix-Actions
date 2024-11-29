@@ -167,11 +167,13 @@ export default async (
 		});
 	} else {
 		await existingTicket.send({
-			content: `||<@${discordUser.id}${payload.uniqid}<@&${store.ping}>||`,
+			content: `||<@${discordUser.id}>${payload.uniqid}<@&${store.ping}>||`,
 			embeds: [
-				new EmbedBuilder().setDescription(
-					`<@${discordUser.id}> has placed a new order!\nThe order has been added to your account, please run \`/claim\` to claim it!`
-				)
+				new EmbedBuilder()
+					.setDescription(
+						`<@${discordUser.id}> has placed a new order!\nThe order has been added to your account, please run \`/claim\` to claim it!`
+					)
+					.setColor(store.colour)
 			]
 		});
 	}
