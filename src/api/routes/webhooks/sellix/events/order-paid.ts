@@ -5,6 +5,7 @@ import getOrDefault from "../../../../../utils/getOrDefault";
 
 export default async (
 	payload: any,
+	res: Response,
 	store: any,
 	client: Client
 ): Promise<void> => {

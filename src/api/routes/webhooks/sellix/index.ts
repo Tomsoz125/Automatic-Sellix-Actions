@@ -14,7 +14,7 @@ const eventsPath = path.join(__dirname, "events");
 // Load all event handlers dynamically
 const eventHandlers: Record<
 	string,
-	(payload: any, store: any, client: Client) => void
+	(payload: any, res: Response, store: any, client: Client) => void
 > = {};
 fs.readdirSync(eventsPath).forEach((file) => {
 	if (file.endsWith(".ts") || file.endsWith(".js")) {
@@ -54,7 +54,8 @@ router.post("/", sellixWebsocket, async (req, res) => {
 
 	if (eventHandlers[eventType]) {
 		try {
-			await eventHandlers[eventType](payload, store, client); // Call the appropriate handler
+			// @ts-ignore
+			await eventHandlers[eventType](payload, res, store, client); // Call the appropriate handler
 			if (!res.statusCode) {
 				res.status(200).json({
 					message: `Handled Sellix event: ${eventType}`
