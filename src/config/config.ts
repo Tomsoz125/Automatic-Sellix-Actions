@@ -11,7 +11,7 @@ export const config = {
 			colour: "#4de0f9",
 			donoInvite: "https://discord.gg/hvndonos",
 			channelId: "1299108148900139100",
-			webhookSecret: process.env.DROS_WS || "",
+			webhookSecret: process.env.DROS_WH || "",
 			heartEmoji: "💙"
 		},
 		vitalityw10: {
@@ -19,7 +19,7 @@ export const config = {
 			colour: "#f11313",
 			donoInvite: "https://discord.gg/jEyzn3zSKy",
 			channelId: "1228702864788947064",
-			webhookSecret: process.env.VITALITY_WS || "",
+			webhookSecret: process.env.VITALITY_WH || "",
 			heartEmoji: "🧡"
 		}
 	}

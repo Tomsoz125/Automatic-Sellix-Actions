@@ -42,6 +42,9 @@ export const sellixWebsocket = (
 	) {
 		next();
 	} else {
+		console.log(
+			`Invalid sellix signature, recieved: ${headerSignature}, expected ${store.webhookSecret}`
+		);
 		res.status(400).json({
 			message: "Invalid or missing Sellix signature header!"
 		});
