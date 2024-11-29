@@ -55,6 +55,7 @@ router.post("/", sellixWebsocket, async (req, res) => {
 	if (eventHandlers[eventType]) {
 		try {
 			// @ts-ignore
+			res.status(102);
 			await eventHandlers[eventType](payload, res, store, client); // Call the appropriate handler
 			if (!res.statusCode) {
 				res.status(200).json({

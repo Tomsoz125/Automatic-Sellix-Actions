@@ -1,4 +1,4 @@
-import { Client, EmbedBuilder } from "discord.js";
+import { Client, EmbedBuilder, Message, MessageType } from "discord.js";
 import { Response } from "express";
 import pool from "../../../../../config/database";
 import getExistingTicket from "../../../../../utils/getExistingTicket";
@@ -117,6 +117,7 @@ export default async (
 			`
     **Customer ID:** ${payload.customer_id}
     **Email:** ${payload.customer_email}
+    **Discord:** ${discordId ? `<@${discordId}>` : "`Failed to find`"}
     **IP Address:** ${payload.ip} (\`${
 				payload.is_vpn_or_proxy ? "VPN" : "Not VPN"
 			}\`)
@@ -145,8 +146,20 @@ export default async (
 		content: `||${store.disputePing}<@${discordId}>||`,
 		embeds: [disputeMsg]
 	});
-	const msg = await message.pin();
-	await msg.delete();
+	await message.pin();
+	const filter = (msg: Message) =>
+		msg.type === MessageType.ChannelPinnedMessage &&
+		msg.author.id === client.user!.id;
+
+	const collector = message.channel.createMessageCollector({
+		filter,
+		max: 1,
+		time: 5000
+	});
+
+	collector.on("collect", async (systemMessage) => {
+		await systemMessage.delete();
+	});
 	await channel.send({ embeds: [disputeMsg] });
 };
 
