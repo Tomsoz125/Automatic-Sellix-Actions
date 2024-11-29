@@ -14,7 +14,8 @@ export const config = {
 			webhookSecret: process.env.DROS_WH || "",
 			heartEmoji: "💙",
 			categories: [],
-			ping: ""
+			ping: "",
+			discordId: ""
 		},
 		vitalityw10: {
 			name: "Vitality Trios",
@@ -24,7 +25,8 @@ export const config = {
 			webhookSecret: process.env.VITALITY_WH || "",
 			heartEmoji: "🧡",
 			categories: ["1312004983310254113"],
-			ping: "938025265995583528"
+			ping: "938025265995583528",
+			discordId: "932586440188104724"
 		}
 	}
 } as {
@@ -41,6 +43,7 @@ export const config = {
 			heartEmoji: string;
 			categories: string[];
 			ping: string;
+			discordId: string;
 		};
 	};
 };
