@@ -9,7 +9,8 @@ export = async (
 	client: Client,
 	categories: string[],
 	store: any,
-	userId: string
+	userId: string,
+	isDispute = false
 ) => {
 	var existingTicket;
 	for (const category of categories) {
@@ -42,6 +43,15 @@ export = async (
 				ticket.isTextBased()
 			) {
 				existingTicket = ticket;
+				break;
+			} else if (
+				isDispute &&
+				ticket.name.includes(userId) &&
+				ticket.isSendable() &&
+				ticket.isTextBased()
+			) {
+				existingTicket = ticket;
+				break;
 			}
 		}
 	}

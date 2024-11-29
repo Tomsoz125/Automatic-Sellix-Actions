@@ -83,7 +83,8 @@ export default async (
 			client,
 			store.disputeCategories,
 			store,
-			discordId
+			discordId,
+			true
 		);
 	}
 
