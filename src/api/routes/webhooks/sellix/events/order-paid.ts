@@ -9,6 +9,17 @@ export default async (
 	store: any,
 	client: Client
 ): Promise<void> => {
+	try {
+		var g = await client.guilds.fetch(store.discordId);
+	} catch (e) {
+		console.log(`Failed to fetch guild for store ${store.name}:\n${e}`);
+		return;
+	}
+	if (!g) {
+		console.log(`Failed to fetch guild for store ${store.name}`);
+		return;
+	}
+
 	const discordUserId = getOrDefault(
 		getOrDefault(payload, "custom_fields", {}),
 		"discord_id",
@@ -19,6 +30,61 @@ export default async (
 		"discord_user",
 		undefined
 	);
+
+	const channelId = store.disputeChannel;
+	var invoicesChannel = undefined;
+	try {
+		invoicesChannel = await client.channels.fetch(channelId);
+	} catch (e) {
+		console.log(
+			`Failed to fetch dispute channel for store ${store.name}:\n${e}`
+		);
+	}
+
+	if (
+		!invoicesChannel ||
+		!invoicesChannel.isTextBased() ||
+		!invoicesChannel.isSendable()
+	) {
+		console.log(
+			`Failed to fetch invoices channel for store ${store.name}! (or channel is not a text channel)`
+		);
+	} else {
+		const saleMsg = new EmbedBuilder()
+			.setAuthor({
+				name: "🥳 New Sale Made",
+				iconURL: g.iconURL()!
+			})
+			.setDescription(
+				`
+    **Customer ID:** ${payload.customer_id}
+    **Email:** ${payload.customer_email}
+    **Discord:** ${
+		discordUserId
+			? `<@${discordUserId}> (${discordUsername})`
+			: "`No discord linked`"
+	}
+    **Store:** ${store.name} (${payload.name})
+    **Products:** ${payload.products
+		.map(
+			(p: any) =>
+				`\n* \`${
+					parseInt(p.title.match(/^\d+/)?.[0] || "1") *
+					getOrDefault(p, "unit_quantity", 1)
+				}x ${p.title.replace(/^\d+x?\s/, "")}\``
+		)
+		.join("")}
+    `
+			)
+			.setColor(store.colour)
+			.setTimestamp(new Date())
+			.setFooter({
+				text: `Invoice ID: ${payload.uniqid}`,
+				iconURL: client.user?.displayAvatarURL()
+			});
+		await invoicesChannel.send({ embeds: [saleMsg] });
+	}
+
 	if (!discordUserId) {
 		console.log(
 			`Sellix order ${payload.uniqid} has been paid, but there is no discord information!`
@@ -49,12 +115,12 @@ export default async (
 		);
 		console.log(rs);
 		let dono_release = 172800;
-        let server_name = store.name;
+		let server_name = store.name;
 		if (rs.length > 0) {
 			// @ts-ignore
 			dono_release = rs[0][0].donations_at;
-            // @ts-ignore
-            server_name = rs[0][0].server_name;
+			// @ts-ignore
+			server_name = rs[0][0].server_name;
 		}
 
 		for (const p of payload.products) {
@@ -64,12 +130,13 @@ export default async (
 			);
 			console.log(rows);
 			if (rows.length > 0) {
-                // @ts-ignore
+				// @ts-ignore
 				const product = rows[0][0];
-                console.log(product)
-                console.log(p)
-                console.log((p.unit_quantity || 1))
-				if (!product) {// [ { enabled_at: null } ], [ `enabled_at` BIGINT ]
+				console.log(product);
+				console.log(p);
+				console.log(p.unit_quantity || 1);
+				if (!product) {
+					// [ { enabled_at: null } ], [ `enabled_at` BIGINT ]
 					for (let i = 0; i < (p.unit_quantity || 1); i++) {
 						nonAutomatic.push(p.uniqid);
 					}
@@ -111,16 +178,6 @@ export default async (
 		connection.release();
 	}
 
-	try {
-		var g = await client.guilds.fetch(store.discordId);
-	} catch (e) {
-		console.log(`Failed to fetch guild for store ${store.name}:\n${e}`);
-		return;
-	}
-	if (!g) {
-		console.log(`Failed to fetch guild for store ${store.name}`);
-		return;
-	}
 	try {
 		var inDiscord = await g.members.fetch(discordUserId);
 	} catch (e) {

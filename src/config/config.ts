@@ -6,7 +6,7 @@ export const config = {
 	BOT_TOKEN: process.env.BOT_TOKEN || "",
 	allowedSellixIps: ["99.81.24.41"],
 	stores: {
-		"xaviiw10": {
+		xaviiw10: {
 			name: "Xavii",
 			colour: "#77187c",
 			donoInvite: "https://discord.gg/xaviitrios",
@@ -18,7 +18,9 @@ export const config = {
 			discordId: "711597574389235734",
 			disputeChannel: "1312476173389008978",
 			disputeCategories: ["1312476025497845850"],
-			disputePing: "<@&1312475762774900876><@&1312475764398100530><@&1312475765551534182><@&1312475766864482345><@&1312475767921311814>"
+			disputePing:
+				"<@&1312475762774900876><@&1312475764398100530><@&1312475765551534182><@&1312475766864482345><@&1312475767921311814>",
+			invoicesChannel: "1315200976906489856"
 		},
 		vitalityw10: {
 			name: "Vitality Trios",
@@ -33,7 +35,8 @@ export const config = {
 			disputeChannel: "1312099900313436191",
 			disputeCategories: ["1312100484621795348"],
 			disputePing:
-				"<@&937915616902397993><@&1052446269433446480><@&961338893792317500><@&1310420668453486603>"
+				"<@&937915616902397993><@&1052446269433446480><@&961338893792317500><@&1310420668453486603>",
+			invoicesChannel: ""
 		}
 	}
 } as {
@@ -54,6 +57,7 @@ export const config = {
 			disputeChannel: string;
 			disputeCategories: string[];
 			disputePing: string;
+			invoicesChannel: string;
 		};
 	};
 };
