@@ -44,26 +44,33 @@ export default async (
 	const nonAutomatic = [];
 	try {
 		const rs = await connection.execute(
-			`SELECT donations_at FROM Config WHERE sellix_store = ?;`,
-			[store.name]
+			`SELECT server_name, donations_at FROM Config WHERE sellix_store = ?;`,
+			[payload.name]
 		);
 		console.log(rs);
 		let dono_release = 172800;
+        let server_name = store.name;
 		if (rs.length > 0) {
 			// @ts-ignore
-			dono_release = rs[0].donations_at;
+			dono_release = rs[0][0].donations_at;
+            // @ts-ignore
+            server_name = rs[0][0].server_name;
 		}
 
 		for (const p of payload.products) {
 			const rows = await connection.execute(
-				`SELECT enabled_at FROM Packs WHERE sellix_id = ?;`,
-				[p.uniqid]
+				`SELECT enabled_at FROM Packs WHERE sellix_id = ? and server = ?;`,
+				[p.uniqid, server_name]
 			);
 			console.log(rows);
 			if (rows.length > 0) {
-				const product = rows[0];
-				if (!product) {
-					for (let i = 0; i < p.unit_quantity; i++) {
+                // @ts-ignore
+				const product = rows[0][0];
+                console.log(product)
+                console.log(p)
+                console.log((p.unit_quantity || 1))
+				if (!product) {// [ { enabled_at: null } ], [ `enabled_at` BIGINT ]
+					for (let i = 0; i < (p.unit_quantity || 1); i++) {
 						nonAutomatic.push(p.uniqid);
 					}
 				} else {
@@ -73,17 +80,17 @@ export default async (
 						// @ts-ignore
 						product.enabled_at < dono_release
 					) {
-						for (let i = 0; i < p.unit_quantity; i++) {
+						for (let i = 0; i < (p.unit_quantity || 1); i++) {
 							earlyPacks.push(p.uniqid);
 						}
 					} else {
-						for (let i = 0; i < p.unit_quantity; i++) {
+						for (let i = 0; i < (p.unit_quantity || 1); i++) {
 							packs.push(p.uniqid);
 						}
 					}
 				}
 			} else {
-				for (let i = 0; i < p.unit_quantity; i++) {
+				for (let i = 0; i < (p.unit_quantity || 1); i++) {
 					nonAutomatic.push(p.uniqid);
 				}
 			}
@@ -154,7 +161,7 @@ export default async (
 			});
 		} else {
 			await existingTicket.send({
-				content: `||<@${discordUser.id}>${payload.uniqid}<@&${store.ping}>||`,
+				content: `||<@${discordUser.id}>${payload.uniqid}<@&${store.ping}> - AUTO||`,
 				embeds: [
 					new EmbedBuilder()
 						.setDescription(
@@ -172,9 +179,9 @@ export default async (
 		}!\n${
 			inDiscord
 				? existingTicket
-					? `I've sent a message in your existing ticket on our [donation server](${store.donoInvite})`
-					: `I've created a ticket for you on our [donation server](${store.donoInvite})`
-				: `You aren't in our [donation server](${store.donoInvite}), please join it and make a ticket`
+					? `I've sent a message in your existing ticket on our [discord server](${store.donoInvite})`
+					: `I've created a ticket for you on our [discord server](${store.donoInvite})`
+				: `You aren't in our [discord server](${store.donoInvite}), please join it and make a ticket`
 		} where our admin team can assist you further!\n\nTo automatically claim your donation you can run the commands in your ticket \`/addimplant\` to link your implant id and then \`/claim\` to be automatically given your donation!\n\n**The following items are in your order:**${payload[
 			"products"
 		]

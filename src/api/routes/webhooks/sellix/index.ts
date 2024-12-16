@@ -35,7 +35,7 @@ router.post("/", sellixWebsocket, async (req, res) => {
 	const eventType = req.headers["x-sellix-event"] as string;
 	const payload = req.body.data;
 	if (payload.uniqid === "dummy") {
-		payload.name = "vitalityw10";
+		payload.name = "xaviiw10";
 		payload.custom_fields = {
 			discord_user: "tomsoz#0",
 			discord_id: "724833136894279690"

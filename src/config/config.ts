@@ -6,19 +6,19 @@ export const config = {
 	BOT_TOKEN: process.env.BOT_TOKEN || "",
 	allowedSellixIps: ["99.81.24.41"],
 	stores: {
-		"dros-haven": {
-			name: "Dro's Haven",
-			colour: "#4de0f9",
-			donoInvite: "https://discord.gg/hvndonos",
-			channelId: "1299108148900139100",
-			webhookSecret: process.env.DROS_WH || "",
-			heartEmoji: "💙",
-			categories: [],
-			ping: "",
-			discordId: "",
-			disputeChannel: "",
-			disputeCategories: [],
-			disputePing: ""
+		"xaviiw10": {
+			name: "Xavii",
+			colour: "#77187c",
+			donoInvite: "https://discord.gg/xaviitrios",
+			channelId: "1315200976906489856",
+			webhookSecret: process.env.XAVII_WH || "",
+			heartEmoji: "🩷",
+			categories: ["1312475981063127207", "1317586680508842065"],
+			ping: "1312475769196253255",
+			discordId: "711597574389235734",
+			disputeChannel: "1312476173389008978",
+			disputeCategories: ["1312476025497845850"],
+			disputePing: "<@&1312475762774900876><@&1312475764398100530><@&1312475765551534182><@&1312475766864482345><@&1312475767921311814>"
 		},
 		vitalityw10: {
 			name: "Vitality Trios",

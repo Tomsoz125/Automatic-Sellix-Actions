@@ -8,8 +8,10 @@ export const sellixWebsocket = (
 	next: NextFunction
 ): void => {
 	const payload = req.body.data;
+    console.log("Order recieved")
+    console.log(payload)
 	if (payload.uniqid === "dummy") {
-		payload.name = "vitalityw10";
+		payload.name = "xaviiw10";
 		payload.custom_fields = {
 			discord_user: "tomsoz#0",
 			discord_id: "724833136894279690"
