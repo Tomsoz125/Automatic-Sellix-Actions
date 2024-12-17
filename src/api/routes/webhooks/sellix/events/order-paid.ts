@@ -56,24 +56,23 @@ export default async (
 				iconURL: g.iconURL()!
 			})
 			.setDescription(
-				`
-    **Customer ID:** ${payload.customer_id}
-    **Email:** ${payload.customer_email}
-    **Discord:** ${
-		discordUserId
-			? `<@${discordUserId}> (${discordUsername})`
-			: "`No discord linked`"
-	}
-    **Store:** ${store.name} (${payload.name})
-    **Products:** ${payload.products
-		.map(
-			(p: any) =>
-				`\n* \`${
-					parseInt(p.title.match(/^\d+/)?.[0] || "1") *
-					getOrDefault(p, "unit_quantity", 1)
-				}x ${p.title.replace(/^\d+x?\s/, "")}\``
-		)
-		.join("")}
+				`**Customer ID:** ${payload.customer_id}\n**Email:** ${
+					payload.customer_email
+				}\n**Discord:** ${
+					discordUserId
+						? `<@${discordUserId}> (${discordUsername})`
+						: "`No discord linked`"
+				}\n**Store:** ${store.name} (${
+					payload.name
+				})\n**Products:** ${payload.products
+					.map(
+						(p: any) =>
+							`\n* \`${
+								parseInt(p.title.match(/^\d+/)?.[0] || "1") *
+								getOrDefault(p, "unit_quantity", 1)
+							}x ${p.title.replace(/^\d+x?\s/, "")}\``
+					)
+					.join("")}
     `
 			)
 			.setColor(store.colour)
