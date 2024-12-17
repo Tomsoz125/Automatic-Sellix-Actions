@@ -53,7 +53,8 @@ export default async (
 		const saleMsg = new EmbedBuilder()
 			.setAuthor({
 				name: "🥳 New Sale Made",
-				iconURL: g.iconURL()!
+				iconURL: g.iconURL()!,
+				url: `https://dashboard.sellix.io/invoices/${payload.uniqid}?shop=${payload.shop_id}`
 			})
 			.setDescription(
 				`**Customer ID:** ${payload.customer_id}\n**Email:** ${
