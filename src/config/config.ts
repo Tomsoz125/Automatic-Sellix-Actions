@@ -13,7 +13,7 @@ export const config = {
 			channelId: "1315200976906489856",
 			webhookSecret: process.env.XAVII_WH || "",
 			heartEmoji: "🩷",
-			categories: ["1312475981063127207", "1317586680508842065"],
+			categories: ["1312475981063127207", "1317586680508842065","1312475978525835274"],
 			ping: "1312475769196253255",
 			discordId: "711597574389235734",
 			disputeChannel: "1312476173389008978",
