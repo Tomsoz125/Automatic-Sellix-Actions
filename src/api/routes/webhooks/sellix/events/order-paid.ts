@@ -31,7 +31,7 @@ export default async (
 		undefined
 	);
 
-	const channelId = store.disputeChannel;
+	const channelId = store.invoicesChannel;
 	var invoicesChannel = undefined;
 	try {
 		invoicesChannel = await client.channels.fetch(channelId);
@@ -73,6 +73,24 @@ export default async (
 							}x ${p.title.replace(/^\d+x?\s/, "")}\``
 					)
 					.join("")}
+				`
+    **Customer ID:** \`${payload.customer_id}\`
+    **Email:** ${payload.customer_email}
+    **Discord:** ${
+		discordUserId
+			? `<@${discordUserId}> (\`${discordUsername}\`)`
+			: "`No discord linked`"
+	}
+    **Store:** ${store.name} (\`${payload.name}\`)
+    **Products:** ${payload.products
+		.map(
+			(p: any) =>
+				`\n* \`${
+					parseInt(p.title.match(/^\d+/)?.[0] || "1") *
+					getOrDefault(p, "unit_quantity", 1)
+				}x ${p.title.replace(/^\d+x?\s/, "")}\``
+		)
+		.join("")}
     `
 			)
 			.setColor(store.colour)
