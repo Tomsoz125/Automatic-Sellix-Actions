@@ -31,7 +31,7 @@ export default async (
 		undefined
 	);
 
-	const channelId = store.disputeChannel;
+	const channelId = store.invoicesChannel;
 	var invoicesChannel = undefined;
 	try {
 		invoicesChannel = await client.channels.fetch(channelId);
@@ -57,14 +57,14 @@ export default async (
 			})
 			.setDescription(
 				`
-    **Customer ID:** ${payload.customer_id}
+    **Customer ID:** \`${payload.customer_id}\`
     **Email:** ${payload.customer_email}
     **Discord:** ${
 		discordUserId
-			? `<@${discordUserId}> (${discordUsername})`
+			? `<@${discordUserId}> (\`${discordUsername}\`)`
 			: "`No discord linked`"
 	}
-    **Store:** ${store.name} (${payload.name})
+    **Store:** ${store.name} (\`${payload.name}\`)
     **Products:** ${payload.products
 		.map(
 			(p: any) =>
