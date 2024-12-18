@@ -107,6 +107,9 @@ export default async (
 	await existingTicket.edit({
 		name: `${payload.customer_email.split("@")[0]}-dispute`
 	});
+	await existingTicket.send({
+		content: `!blacklist ${payload.ip_info.ip} Payment disputed (${payload.uniqid})`
+	});
 	const disputeMsg = new EmbedBuilder()
 		.setAuthor({
 			name: "⚔️ New Dispute Opened",
